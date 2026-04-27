@@ -73,11 +73,11 @@
 ### **SOME OF THE QUERIES WITH OUTPUT**  
 
 <p align="left">
-<img width="800" height="400" alt="Screenshot 2026-04-27 071944" src="https://github.com/user-attachments/assets/f8df99e6-868a-4aa3-b449-ca259b9efcab" />
+<img width="600" height="500" alt="Screenshot 2026-04-27 071944" src="https://github.com/user-attachments/assets/f8df99e6-868a-4aa3-b449-ca259b9efcab" />
 <p align="left">
-<img width="800" height="400" alt="Screenshot 2026-04-27 072059" src="https://github.com/user-attachments/assets/dcd829d9-80ad-4c13-b1ab-01da0e1228a7" />
+<img width="600" height="500" alt="Screenshot 2026-04-27 072059" src="https://github.com/user-attachments/assets/dcd829d9-80ad-4c13-b1ab-01da0e1228a7" />
 <p align="left">
-<img width="300" height="250" alt="Screenshot 2026-04-27 072119" src="https://github.com/user-attachments/assets/e2b61a08-2c67-46d3-b128-94c7d56dcb8f" />
+<img width="300" height="200" alt="Screenshot 2026-04-27 072119" src="https://github.com/user-attachments/assets/e2b61a08-2c67-46d3-b128-94c7d56dcb8f" />
 
 
 
