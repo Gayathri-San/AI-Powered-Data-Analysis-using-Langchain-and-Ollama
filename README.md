@@ -40,7 +40,7 @@
 
 
  <p align="center">
-  <img width="600" height="800" alt="chatgpt" src="https://github.com/user-attachments/assets/db34348d-9044-404d-8482-ac66a0da9f74" />
+  <img width="1200" height="600" alt="chatgpt" src="https://github.com/user-attachments/assets/db34348d-9044-404d-8482-ac66a0da9f74" />
  </p>
  
 
