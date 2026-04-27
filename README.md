@@ -93,7 +93,7 @@
 <p align="left">
 <img width="600" height="500" alt="Screenshot 2026-04-27 073403" src="https://github.com/user-attachments/assets/291a6215-ff71-45f8-94d0-47158c0e9ab2" />
 <p align="left">
-<img width="600" height="500" alt="Screenshot 2026-04-27 073418" src="https://github.com/user-attachments/assets/8ca49874-d4d8-4a96-820b-de5892105ff4" />
+<img width="1000" height="250" alt="Screenshot 2026-04-27 073418" src="https://github.com/user-attachments/assets/8ca49874-d4d8-4a96-820b-de5892105ff4" />
 
 
 
