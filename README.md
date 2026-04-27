@@ -77,7 +77,7 @@
 <p align="left">
 <img width="600" height="500" alt="Screenshot 2026-04-27 072059" src="https://github.com/user-attachments/assets/dcd829d9-80ad-4c13-b1ab-01da0e1228a7" />
 <p align="left">
-<img width="650" height="250" alt="Screenshot 2026-04-27 072119" src="https://github.com/user-attachments/assets/e2b61a08-2c67-46d3-b128-94c7d56dcb8f" />
+<img width="450" height="150" alt="Screenshot 2026-04-27 072119" src="https://github.com/user-attachments/assets/e2b61a08-2c67-46d3-b128-94c7d56dcb8f" />
 
 
 <p align="left">
