@@ -38,8 +38,9 @@
  - Ollama generates meaningful insights from analyzed results 
  - Final output result such as table , charts and insights are displayed in Streamlit UI
 
+
  <p align="center">
-  <img width="600" height="500" alt="chatgpt" src="https://github.com/user-attachments/assets/db34348d-9044-404d-8482-ac66a0da9f74" />
+  <img width="600" height="600" alt="chatgpt" src="https://github.com/user-attachments/assets/db34348d-9044-404d-8482-ac66a0da9f74" />
  </p>
  
 
