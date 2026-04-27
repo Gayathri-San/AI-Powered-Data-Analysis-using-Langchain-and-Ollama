@@ -42,6 +42,55 @@
  <p align="center">
   <img width="1200" height="600" alt="chatgpt" src="https://github.com/user-attachments/assets/db34348d-9044-404d-8482-ac66a0da9f74" />
  </p>
+
+### **LANGCHAIN**
+- LangChain is a open source software framework used to build applications powered by Large Language Models 
+- It helps in connecting AI models with external data sources and tools 
+- It manages the workflow of processing natural language inputs step by step 
+- It enables conversion of user queries into structured formats like JSON or logic 
+- It improves the ability of LLMs to perform reasoning and multi-step tasks 
+- It is used to integrate LLMs with Python applications easily 
+- It acts as a bridge between user input, AI model, and backend processing
+
+### **OLLAMA**
+- Ollama is a tool used to run Large Language Models (LLMs) locally on a system 
+- It allows AI models like Llama, Mistral, and others to run without cloud dependency 
+- It processes natural language queries and generates intelligent responses 
+- It supports offline AI usage with better privacy and control 
+- It integrates easily with Python and frameworks like LangChain 
+- It is used to generate structured outputs, summaries, and insights 
+- It helps in building AI applications without requiring external APIs
+
+### **STREAMLIT**
+- Streamlit is a Python framework used to build interactive web applications easily 
+- It allows creating a user interface for data applications without frontend coding 
+- In this project, Streamlit is used to run the application locally in VS Code 
+- It provides interface for uploading datasets and entering queries 
+- It displays result tables, charts, and AI-generated insights 
+- The application runs on a local server (localhost) instead of cloud deployment 
+- It helps in visualizing data analysis outputs in a simple web-based UI
+
+### **SOME OF THE QUERIES WITH OUTPUT**  
+
+<p align="left">
+<img width="600" height="400" alt="Screenshot 2026-04-27 071944" src="https://github.com/user-attachments/assets/f8df99e6-868a-4aa3-b449-ca259b9efcab" />
+<p align="left">
+<img width="600" height="400" alt="Screenshot 2026-04-27 072059" src="https://github.com/user-attachments/assets/dcd829d9-80ad-4c13-b1ab-01da0e1228a7" />
+<p align="left">
+<img width="600" height="400" alt="Screenshot 2026-04-27 072119" src="https://github.com/user-attachments/assets/e2b61a08-2c67-46d3-b128-94c7d56dcb8f" />
+
+
+
+
+### **FUTURE WORK**
+- Deploy the application on cloud platforms like Streamlit Cloud or AWS 
+- Add support for multiple file formats (Excel, SQL databases) 
+- Enhance chart customization and interactive dashboards 
+- Improve insight generation with advanced AI models 
+- Build export feature for reports (PDF/Excel) 
+
+
+
  
 
 
