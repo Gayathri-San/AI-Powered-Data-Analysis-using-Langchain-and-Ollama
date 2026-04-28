@@ -1,13 +1,12 @@
 import pandas as pd
 import json
 import re
-
-from langchain_community.llms import Ollama   # ✅ CHANGED
+from langchain_community.llms import Ollama
 
 
 def run_query(df, query):
 
-    df = df.copy()  # safety
+    df = df.copy()
 
     # -------- PROMPT --------
     columns = df.columns.tolist()
@@ -17,8 +16,10 @@ def run_query(df, query):
 
     Rules:
     - group_by can be single OR multiple columns
-    - metric must be column name ONLY
+    - metric must be column name ONLY (never 'count')
     - aggregation: count, sum, mean, min, max
+    - Avoid ID-like columns for grouping
+    - Prefer categorical columns
     - Use ONLY columns from this list: {columns}
 
     Format:
@@ -32,11 +33,7 @@ def run_query(df, query):
     Query: {query}
     """
 
-    # -------- LANGCHAIN OLLAMA --------
-    llm = Ollama(
-        model="llama3",   # ✅ using llama3:8b
-        temperature=0
-    )
+    llm = Ollama(model="llama3", temperature=0)
 
     raw_output = llm.invoke(prompt)
     print("\nRaw LLM Output:\n", raw_output)
@@ -51,12 +48,10 @@ def run_query(df, query):
 
     config = extract_json(raw_output)
 
-    # -------- EXTRACT TOP N --------
+    # -------- TOP N --------
     def extract_top_n(query):
         match = re.search(r"top\s*(\d+)", query.lower())
-        if match:
-            return int(match.group(1))
-        return None
+        return int(match.group(1)) if match else None
 
     top_n = extract_top_n(query)
 
@@ -71,140 +66,138 @@ def run_query(df, query):
     if any(word in query.lower() for word in ["count", "number", "how many"]):
         agg = "count"
 
+    # -------- 🚨 FIX INVALID METRIC --------
+    if metric not in df.columns:
+        metric = None
+
     config["metric"] = metric
     config["aggregation"] = agg
 
-    # -------- TIME DETECTION --------
-    def detect_time_grain(query):
-        q = query.lower()
-        if "month" in q:
-            return "month"
-        elif "year" in q:
-            return "year"
-        elif "day" in q or "date" in q:
-            return "day"
-        return None
-
-    time_grain = detect_time_grain(query)
-
-    # detect date column
-    date_col = None
-    for col in df.columns:
-        if "date" in col:
-            date_col = col
-            break
-
-    # -------- COLUMN MATCH --------
-    def match_column(name, df_columns):
-        if name is None:
+    # -------- MATCH COLUMN --------
+    def match_column(name):
+        if not name:
             return None
-
         name = str(name).lower().replace("_", "").replace(" ", "")
-
-        for col in df_columns:
+        for col in df.columns:
             col_clean = col.lower().replace("_", "").replace(" ", "")
             if name in col_clean or col_clean in name:
                 return col
-
         return None
 
     # =========================================================
-    # 🔥 FIXED TIME GROUPING (MONTH ORDER CORRECT)
+    # GROUPING
     # =========================================================
-    if time_grain and date_col:
+    group_raw = config.get("group_by")
 
-        df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
+    if isinstance(group_raw, str) and "," in group_raw:
+        group_raw = [g.strip() for g in group_raw.split(",")]
+    elif not isinstance(group_raw, list):
+        group_raw = [group_raw]
 
-        if time_grain == "month":
-            df["month"] = df[date_col].dt.to_period("M")
+    group_cols = []
+    for col in group_raw:
+        matched = match_column(col)
+        if matched:
+            group_cols.append(matched)
 
+    # -------- REMOVE HIGH CARDINALITY + ID --------
+    filtered = []
+    for col in group_cols:
+        if df[col].nunique() < len(df) * 0.3 and "id" not in col:
+            filtered.append(col)
+
+    if filtered:
+        group_cols = filtered
+
+    # -------- AUTO ADD SECOND COLUMN --------
+    if len(group_cols) == 1:
+        for col in df.columns:
+            if col not in group_cols:
+                ratio = df[col].nunique() / len(df)
+                if 0.01 < ratio < 0.5:
+                    group_cols.append(col)
+                    break
+
+    if not group_cols:
+        raise ValueError("❌ No valid group columns")
+
+    # =========================================================
+    # COUNT / NUNIQUE (FIXED)
+    # =========================================================
+    working_df = df
+
+    use_nunique = False
+
+    if agg == "count":
+        if "unique" in query.lower():
+            use_nunique = True
+        elif metric and "id" in str(metric).lower():
+            use_nunique = True
+        elif any(word in query.lower() for word in ["customer", "user", "product"]):
+            use_nunique = True
+
+    if agg == "count":
+
+        # ✅ USE NUNIQUE ONLY IF VALID METRIC EXISTS
+        if use_nunique and metric:
             result = (
-                df.groupby("month")[metric]
-                .agg(agg)
-                .reset_index()
-                .sort_values("month")
+                working_df.groupby(group_cols)[metric]
+                .nunique()
+                .reset_index(name="count")
             )
 
-            result["month"] = result["month"].astype(str)
-            group_cols = ["month"]
-
-        elif time_grain == "year":
-            df["year"] = df[date_col].dt.year
-
-            result = (
-                df.groupby("year")[metric]
-                .agg(agg)
-                .reset_index()
-                .sort_values("year")
-            )
-
-            group_cols = ["year"]
-
-        elif time_grain == "day":
-            df["day"] = df[date_col].dt.date
-
-            result = (
-                df.groupby("day")[metric]
-                .agg(agg)
-                .reset_index()
-                .sort_values("day")
-            )
-
-            group_cols = ["day"]
-
-    else:
-        # normal grouping
-        group_raw = config.get("group_by")
-
-        if isinstance(group_raw, str) and "," in group_raw:
-            group_raw = [g.strip() for g in group_raw.split(",")]
-        elif not isinstance(group_raw, list):
-            group_raw = [group_raw]
-
-        group_cols = []
-        for col in group_raw:
-            matched = match_column(col, df.columns)
-            if matched:
-                group_cols.append(matched)
-
-        if not group_cols:
-            raise ValueError(f"❌ No valid group columns found: {group_raw}")
-
-        if agg == "count":
-            result = df.groupby(group_cols).size().reset_index(name="count")
-
+        # ✅ SAFE FALLBACK (NO METRIC)
         else:
-            df[metric] = pd.to_numeric(df[metric], errors="coerce")
-
             result = (
-                df.groupby(group_cols)[metric]
-                .agg(agg)
-                .reset_index()
+                working_df.groupby(group_cols)
+                .size()
+                .reset_index(name="count")
             )
 
-    # =========================================================
-    # 🔥 FINAL SORT
-    # =========================================================
-    time_cols = ["month", "year", "day"]
-
-    if any(col in result.columns for col in time_cols):
-        for t in time_cols:
-            if t in result.columns:
-                result = result.sort_values(by=t)
-                break
     else:
-        value_col = result.columns[-1]
-        result = result.sort_values(by=value_col, ascending=False)
+        if metric is None:
+            raise ValueError("❌ Metric required for aggregation")
+
+        working_df[metric] = pd.to_numeric(working_df[metric], errors="coerce")
+
+        result = (
+            working_df.groupby(group_cols)[metric]
+            .agg(agg)
+            .reset_index()
+        )
+
+    # =========================================================
+    # PIVOT CONTROL
+    # =========================================================
+    by_count = query.lower().count("by")
+
+    if len(group_cols) == 2 and by_count < 2:
+        try:
+            result = result.pivot(
+                index=group_cols[0],
+                columns=group_cols[1],
+                values=result.columns[-1]
+            ).fillna(0).reset_index()
+        except:
+            pass
+
+    # =========================================================
+    # FORCE COLUMN ORDER
+    # =========================================================
+    if "category" in result.columns:
+        cols = ["category"] + [c for c in result.columns if c != "category"]
+        result = result[cols]
+
+    elif len(group_cols) >= 2:
+        cols = group_cols[:2] + [c for c in result.columns if c not in group_cols[:2]]
+        result = result[cols]
+
+    # -------- SORT --------
+    if result.shape[1] > 1:
+        result = result.sort_values(by=result.columns[-1], ascending=False)
 
     # -------- TOP N --------
-    if top_n is not None:
+    if top_n:
         result = result.head(top_n)
-
-    # -------- DEBUG --------
-    print("\n--- DEBUG INFO ---")
-    print("Query:", query)
-    print("Parsed JSON:", config)
-    print("Group Columns:", group_cols)
-    print("Metric Column:", metric)
 
     return result
