@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import numpy as np
 
-def plot_chart(df, chart_type="auto"):
+def plot_chart(df, chart_type):
     if df is None or df.empty:
-        print("No data to plot")
+        st.write("No data to plot")
         return
 
     cols = df.columns.tolist()
