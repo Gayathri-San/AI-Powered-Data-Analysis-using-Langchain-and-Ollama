@@ -81,11 +81,11 @@
 
 
 <p align="left">
-<img width="500" height="400" alt="Screenshot 2026-04-28 074445" src="https://github.com/user-attachments/assets/6285b8ed-896d-4995-8aac-72bb2c06572e" />
+<img width="550" height="450" alt="Screenshot 2026-04-28 074445" src="https://github.com/user-attachments/assets/6285b8ed-896d-4995-8aac-72bb2c06572e" />
 <p align="left">
 <img width="600" height="500" alt="Screenshot 2026-04-28 074539" src="https://github.com/user-attachments/assets/bdedc1f0-dfcb-44f7-b0e2-3e6b61e3e813" />
 <p align="left">
-<img width="800" height="200" alt="Screenshot 2026-04-28 074844" src="https://github.com/user-attachments/assets/33a299ba-8006-4a52-932c-dc03a96fe39e" />
+<img width="700" height="180" alt="Screenshot 2026-04-28 074844" src="https://github.com/user-attachments/assets/33a299ba-8006-4a52-932c-dc03a96fe39e" />
 
 
 
